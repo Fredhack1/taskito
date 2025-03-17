@@ -7,6 +7,8 @@ class Task {
   String description;
   String status;
   TaskCategory category;
+  DateTime? startDate;
+  DateTime? endDate;
 
   Task({
     required this.id,
@@ -14,6 +16,8 @@ class Task {
     required this.description,
     required this.status,
     required this.category,
+    this.startDate,
+    this.endDate,
   });
 }
 

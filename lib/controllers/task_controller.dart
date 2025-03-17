@@ -38,7 +38,7 @@ class TaskController extends GetxController {
   }
 
   // Fonction d'ajout de catégories de tâches
-  void addTask(title, description, status, category) {
+  void addTask(title, description, status, category, startDate, endDate) {
     if (titleController.text.isNotEmpty &&
         descriptionController.text.isNotEmpty) {
       // Ajouter la logique d'ajout de tâche ici
@@ -49,6 +49,8 @@ class TaskController extends GetxController {
           description: description,
           status: statusLabel[status]!,
           category: category,
+          startDate: startDate,
+          endDate: endDate,
         ),
       );
       TaskCategory taskCategory = category;

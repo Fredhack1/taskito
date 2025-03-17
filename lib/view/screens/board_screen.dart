@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:taskito/controllers/board_controller.dart';
 import 'package:taskito/controllers/task_controller.dart';
 import 'package:taskito/models/task_category.dart';
-import 'package:taskito/models/task_categories_database.dart';
 import 'package:taskito/view/components/board_tile.dart';
 
 class BoardScreen extends StatelessWidget {
@@ -12,18 +12,8 @@ class BoardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Injection des Controllers
-    TaskCategoriesDatabase taskCategoriesDatabase = TaskCategoriesDatabase();
     TaskController taskController = Get.put(TaskController());
-
-    // Liste des icônes correspondantes
-    final icons = [
-      CupertinoIcons.person,
-      CupertinoIcons.briefcase,
-      CupertinoIcons.lock,
-      CupertinoIcons.person_2,
-      CupertinoIcons.calendar,
-      CupertinoIcons.add_circled
-    ];
+    BoardController boardController = Get.put(BoardController());
 
     // Liste des couleurs
     final colors = [
@@ -66,21 +56,22 @@ class BoardScreen extends StatelessWidget {
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
             ),
-            itemCount: taskCategoriesDatabase.taskCategories.length,
+            itemCount:
+                boardController.taskCategoriesDatabase.taskCategories.length,
             itemBuilder: (context, index) {
               // J'utilise le modulo pour répartir les couleurs cycliquement
               Color tileColor = colors[index % colors.length];
 
               // Récupération de la catégorie du board en fonction de l'index
               TaskCategory taskCategory =
-                  taskCategoriesDatabase.taskCategories[index];
+                  boardController.taskCategoriesDatabase.taskCategories[index];
 
               return BoardTile(
                 title: taskCategory.name,
                 tasksCount: taskController.tasksDatabase
                     .getTaskByCategory(taskCategory)
                     .length,
-                icon: icons[index],
+                icon: taskCategory.icon,
                 color: tileColor,
                 onTap: () {
                   if (taskCategory.isSterile == true) {

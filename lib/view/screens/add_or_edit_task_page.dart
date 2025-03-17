@@ -176,13 +176,25 @@ class AddOrEditTaskPage extends StatelessWidget {
                               return CustomButton(
                                 color: Theme.of(context).colorScheme.secondary,
                                 onTap: () {
-                                  taskController.addTask(
-                                    taskController.titleController.value.text,
-                                    taskController
-                                        .descriptionController.value.text,
-                                    taskController.selectedStatus.value,
-                                    taskController.selectedCategory.value,
+                                  var startDate = DateTime(
+                                    startDateController.selectedYear.value ?? 0,
+                                    startDateController.selectedMonth.value ??
+                                        0,
+                                    startDateController.selectedDay.value ?? 0,
                                   );
+                                  var endDate = DateTime(
+                                    endDateController.selectedYear.value ?? 0,
+                                    endDateController.selectedMonth.value ?? 0,
+                                    endDateController.selectedDay.value ?? 0,
+                                  );
+                                  taskController.addTask(
+                                      taskController.titleController.value.text,
+                                      taskController
+                                          .descriptionController.value.text,
+                                      taskController.selectedStatus.value,
+                                      taskController.selectedCategory.value,
+                                      startDate,
+                                      endDate);
                                 },
                                 text: "Add Task",
                               );
