@@ -10,6 +10,8 @@ class TasksDatabase {
       description: 'Go to the store and buy necessary groceries.',
       status: 'À faire',
       category: TaskCategory(name: "Personal"),
+      startDate: DateTime(2025, 03, 17),
+      endDate: DateTime(2025, 03, 22),
     ),
     Task(
       id: 2,
@@ -17,6 +19,8 @@ class TasksDatabase {
       description: 'Schedule a meeting with the team for the project update.',
       status: 'En cours',
       category: TaskCategory(name: "Personal"),
+      startDate: DateTime(2025, 03, 17),
+      endDate: DateTime(2025, 03, 22),
     ),
     Task(
         id: 3,
@@ -40,6 +44,8 @@ class TasksDatabase {
       description: 'Website UI design for 100k.',
       status: 'En cours',
       category: TaskCategory(name: "Work"),
+      startDate: DateTime(2025, 03, 17),
+      endDate: DateTime(2025, 03, 22),
     ),
     Task(
       id: 6,
@@ -47,6 +53,8 @@ class TasksDatabase {
       description: 'Website UI design for 250k.',
       status: 'À faire',
       category: TaskCategory(name: "Work"),
+      startDate: DateTime(2025, 03, 17),
+      endDate: DateTime(2025, 03, 22),
     ),
     Task(
       id: 7,

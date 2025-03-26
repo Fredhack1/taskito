@@ -81,4 +81,11 @@ class TaskController extends GetxController {
       );
     }
   }
+
+  // Fonction de suppression de tâche
+  void deleteTask(int taskId) {
+    tasksDatabase.tasks.removeWhere((element) => element.id == taskId);
+    Get.back();
+    update();
+  }
 }

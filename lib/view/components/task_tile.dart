@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:taskito/controllers/status_color_controller.dart';
@@ -6,6 +7,8 @@ class TaskTile extends StatelessWidget {
   final String status;
   final String title;
   final String description;
+  final String startDate;
+  final String endDate;
   final Function()? onTap;
   const TaskTile({
     super.key,
@@ -13,6 +16,8 @@ class TaskTile extends StatelessWidget {
     required this.description,
     required this.status,
     required this.onTap,
+    required this.startDate,
+    required this.endDate,
   });
 
   void _showStatusChanger(
@@ -109,7 +114,7 @@ class TaskTile extends StatelessWidget {
             top: 15.0, left: 20.0, right: 20.0, bottom: 15.0),
         margin: const EdgeInsets.only(bottom: 15.0),
         width: MediaQuery.of(context).size.width,
-        height: 150,
+        // height: 160,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: const BorderRadius.all(Radius.circular(15)),
@@ -220,6 +225,36 @@ class TaskTile extends StatelessWidget {
                       Icons.more_vert,
                       color: Theme.of(context).colorScheme.tertiary,
                     ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 5),
+            // Due date
+            Row(
+              children: [
+                Icon(
+                  CupertinoIcons.clock,
+                  color: Theme.of(context).colorScheme.tertiary,
+                  size: 20,
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  startDate,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                Text(
+                  " – ",
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                Text(
+                  endDate,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ],

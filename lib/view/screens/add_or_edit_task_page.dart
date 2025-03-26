@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:taskito/controllers/task_controller.dart';
 import 'package:taskito/controllers/date_controller.dart';
+import 'package:taskito/models/task.dart';
 import 'package:taskito/models/task_category.dart';
 import 'package:taskito/view/components/custom_button.dart';
 import 'package:taskito/view/components/custom_date_picker.dart';
@@ -20,8 +21,14 @@ class AddOrEditTaskPage extends StatelessWidget {
     // Récupérer les arguments passées lors de la navigation
     final Map arguments = Get.arguments ?? {};
     final String pageTitle = arguments['pageTitle'] ?? "No Title";
-    // Form state
-    // final _formState = GlobalKey<FormState>();
+    late int taskId = arguments['task-id'] ?? 0;
+    // Injection des dépendances pour la modification d'une tâche
+    late Task task = taskController.tasksDatabase.getTaskById(taskId);
+    final TextEditingController titleController =
+        TextEditingController(text: task.name);
+    final TextEditingController descriptionController =
+        TextEditingController(text: task.description);
+    print(task.status);
 
     return GestureDetector(
       onTap: () {
@@ -45,7 +52,7 @@ class AddOrEditTaskPage extends StatelessWidget {
                       icon: const Icon(Icons.arrow_back_ios),
                     ),
                     Text(
-                      pageTitle,
+                      taskId != null ? "Edit Task" : pageTitle,
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.w700,
@@ -74,7 +81,10 @@ class AddOrEditTaskPage extends StatelessWidget {
                       children: [
                         // Task title
                         CustomTextField(
-                          controller: taskController.titleController,
+                          controller: taskId != null
+                              ? titleController
+                              : taskController.titleController,
+                          // initialValue: task.id != null ? task.name : null,
                           hintText: "Task title...",
                           obscureText: false,
                           inputType: TextInputType.text,
@@ -88,7 +98,10 @@ class AddOrEditTaskPage extends StatelessWidget {
                         ),
                         // Task description
                         CustomTextField(
-                          controller: taskController.descriptionController,
+                          controller: taskId != null
+                              ? descriptionController
+                              : taskController.descriptionController,
+                          // initialValue: task.id != null ? task.name : null,
                           hintText: "Task description...",
                           obscureText: false,
                           inputType: TextInputType.multiline,
@@ -100,40 +113,65 @@ class AddOrEditTaskPage extends StatelessWidget {
                             return null;
                           },
                         ),
+
                         // Task status with dropdown list
-                        CustomDropdownList(
-                          label: "Task status",
-                          onSelected: (newValue) =>
-                              taskController.selectedStatus.value = newValue!,
-                          dropdownMenuEntries:
-                              taskController.statues.map((status) {
-                            return DropdownMenuEntry<TaskStatus>(
-                              value: status,
-                              label: statusLabel[status]!,
-                              style: MenuItemButton.styleFrom(
-                                foregroundColor:
-                                    Theme.of(context).colorScheme.primary,
-                              ),
-                            );
-                          }).toList(),
+                        Obx(
+                          () => CustomDropdownList(
+                            label: "Task status",
+                            initialSelection: taskId != null
+                                ? task.status
+                                : taskController.selectedStatus.value,
+                            onSelected: (newValue) {
+                              if (task.id != null) {
+                                task.status;
+                              } else {
+                                taskController.selectedStatus.value = newValue!;
+                              }
+                            },
+                            // onSelected: (newValue) =>
+                            //     taskController.selectedStatus.value = newValue!,
+                            dropdownMenuEntries:
+                                taskController.statues.map((status) {
+                              return DropdownMenuEntry<TaskStatus>(
+                                value: status,
+                                label: statusLabel[status]!,
+                                style: MenuItemButton.styleFrom(
+                                  foregroundColor:
+                                      Theme.of(context).colorScheme.primary,
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
 
                         // Task categories with dropdown list
-                        CustomDropdownList(
-                          label: "Task Categories",
-                          onSelected: (val) =>
-                              taskController.selectedCategory.value = val,
-                          dropdownMenuEntries: taskController.categories
-                              .where((category) => !category.isSterile)
-                              .map((category) {
-                            return DropdownMenuEntry<TaskCategory>(
-                              value: category,
-                              label: category.name,
-                              style: MenuItemButton.styleFrom(
-                                  foregroundColor:
-                                      Theme.of(context).colorScheme.primary),
-                            );
-                          }).toList(),
+                        Obx(
+                          () => CustomDropdownList(
+                            label: "Task Categories",
+                            initialSelection: taskId != null
+                                ? task.category.name
+                                : taskController.selectedCategory.value,
+                            onSelected: (val) {
+                              if (taskId != null) {
+                                task.category.name;
+                              } else {
+                                taskController.selectedCategory.value = val;
+                              }
+                            },
+                            // onSelected: (val) =>
+                            //     taskController.selectedCategory.value = val,
+                            dropdownMenuEntries: taskController.categories
+                                .where((category) => !category.isSterile)
+                                .map((category) {
+                              return DropdownMenuEntry<TaskCategory>(
+                                value: category,
+                                label: category.name,
+                                style: MenuItemButton.styleFrom(
+                                    foregroundColor:
+                                        Theme.of(context).colorScheme.primary),
+                              );
+                            }).toList(),
+                          ),
                         ),
 
                         // Start date
@@ -196,17 +234,19 @@ class AddOrEditTaskPage extends StatelessWidget {
                                       startDate,
                                       endDate);
                                 },
-                                text: "Add Task",
+                                text:
+                                    task.id != null ? "Edit Task" : "Add Task",
                               );
                             } else {
                               return CustomButton(
                                 color: Theme.of(context).colorScheme.tertiary,
                                 onTap: null,
-                                text: "Add Task",
+                                text:
+                                    task.id != null ? "Edit Task" : "Add Task",
                               );
                             }
                           },
-                        )
+                        ),
                       ],
                     ),
                   ],

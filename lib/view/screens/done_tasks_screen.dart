@@ -43,9 +43,13 @@ class DoneTasksScreen extends StatelessWidget {
                         title: task.name,
                         description: task.description,
                         status: task.status,
+                        startDate:
+                            '${task.startDate?.year ?? DateTime.now().year}-${task.startDate?.month.toString().padLeft(2, '0') ?? '01'}-${task.startDate?.day.toString().padLeft(2, '0') ?? '01'}',
+                        endDate:
+                            '${task.endDate?.year ?? '2025'}-${task.endDate?.month.toString().padLeft(2, '0') ?? '01'}-${task.endDate?.day.toString().padLeft(2, '0') ?? '01'}',
                         onTap: () {
                           Get.toNamed(
-                            '/show-task-details',
+                            '/task-details',
                             arguments: {
                               'pageTitle': 'Details',
                               'taskId': task.id,
