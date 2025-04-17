@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:popover/popover.dart';
 import 'package:taskito/controllers/task_controller.dart';
 import 'package:taskito/models/task_category.dart';
+import 'package:taskito/view/components/popover_task_more_options.dart';
 import 'package:taskito/view/components/task_tile.dart';
 import 'package:taskito/models/task.dart';
 
@@ -85,6 +87,21 @@ class TasksListPage extends StatelessWidget {
                               'pageTitle': 'Details',
                               'taskId': task.id,
                             },
+                          );
+                        },
+                        onMoreBtnTap: () {
+                          showPopover(
+                            context: context,
+                            bodyBuilder: (context) => PopoverTaskMoreOptions(
+                              onTapOnEditBtn: () {
+                                print('On edit button tapped...');
+                              },
+                            ),
+                            direction: PopoverDirection.bottom,
+                            width: 250,
+                            height: 100,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.background,
                           );
                         },
                       );

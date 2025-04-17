@@ -20,10 +20,19 @@ class AddOrEditTaskPage extends StatelessWidget {
     final DateController endDateController = DateController();
     // Récupérer les arguments passées lors de la navigation
     final Map arguments = Get.arguments ?? {};
-    final String pageTitle = arguments['pageTitle'] ?? "No Title";
     late int taskId = arguments['task-id'] ?? 0;
     // Injection des dépendances pour la modification d'une tâche
-    late Task task = taskController.tasksDatabase.getTaskById(taskId);
+    print("Task ID: $taskId");
+    late Task task = Task(
+      id: -1,
+      name: '',
+      description: '',
+      status: '',
+      category: TaskCategory(name: ''),
+    );
+    if (taskId >= 0) {
+      task = taskController.tasksDatabase.getTaskById(taskId);
+    }
     final TextEditingController titleController =
         TextEditingController(text: task.name);
     final TextEditingController descriptionController =
@@ -52,7 +61,7 @@ class AddOrEditTaskPage extends StatelessWidget {
                       icon: const Icon(Icons.arrow_back_ios),
                     ),
                     Text(
-                      taskId != null ? "Edit Task" : pageTitle,
+                      taskId >= 0 ? "Edit Task" : "Add Task",
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.w700,
@@ -81,10 +90,10 @@ class AddOrEditTaskPage extends StatelessWidget {
                       children: [
                         // Task title
                         CustomTextField(
-                          controller: taskId != null
+                          controller: taskId >= 0
                               ? titleController
                               : taskController.titleController,
-                          // initialValue: task.id != null ? task.name : null,
+                          // initialValue: task.id >= 0 ? task.name : null,
                           hintText: "Task title...",
                           obscureText: false,
                           inputType: TextInputType.text,
@@ -98,10 +107,10 @@ class AddOrEditTaskPage extends StatelessWidget {
                         ),
                         // Task description
                         CustomTextField(
-                          controller: taskId != null
+                          controller: taskId >= 0
                               ? descriptionController
                               : taskController.descriptionController,
-                          // initialValue: task.id != null ? task.name : null,
+                          // initialValue: task.id >= 0 ? task.name : null,
                           hintText: "Task description...",
                           obscureText: false,
                           inputType: TextInputType.multiline,
@@ -118,11 +127,11 @@ class AddOrEditTaskPage extends StatelessWidget {
                         Obx(
                           () => CustomDropdownList(
                             label: "Task status",
-                            initialSelection: taskId != null
+                            initialSelection: taskId >= 0
                                 ? task.status
                                 : taskController.selectedStatus.value,
                             onSelected: (newValue) {
-                              if (task.id != null) {
+                              if (task.id >= 0) {
                                 task.status;
                               } else {
                                 taskController.selectedStatus.value = newValue!;
@@ -148,11 +157,11 @@ class AddOrEditTaskPage extends StatelessWidget {
                         Obx(
                           () => CustomDropdownList(
                             label: "Task Categories",
-                            initialSelection: taskId != null
+                            initialSelection: taskId >= 0
                                 ? task.category.name
                                 : taskController.selectedCategory.value,
                             onSelected: (val) {
-                              if (taskId != null) {
+                              if (taskId >= 0) {
                                 task.category.name;
                               } else {
                                 taskController.selectedCategory.value = val;
@@ -234,15 +243,13 @@ class AddOrEditTaskPage extends StatelessWidget {
                                       startDate,
                                       endDate);
                                 },
-                                text:
-                                    task.id != null ? "Edit Task" : "Add Task",
+                                text: task.id >= 0 ? "Edit Task" : "Add Task",
                               );
                             } else {
                               return CustomButton(
                                 color: Theme.of(context).colorScheme.tertiary,
                                 onTap: null,
-                                text:
-                                    task.id != null ? "Edit Task" : "Add Task",
+                                text: task.id >= 0 ? "Edit Task" : "Add Task",
                               );
                             }
                           },

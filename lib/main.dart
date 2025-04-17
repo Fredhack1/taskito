@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
             page: () => const TasksListPage(),
           ),
           GetPage(
-            name: '/add-or-edit-task',
+            name: '/task-form',
             page: () => const AddOrEditTaskPage(),
           ),
           GetPage(

@@ -86,7 +86,7 @@ class TaskDetailPage extends StatelessWidget {
                       IconButton(
                         onPressed: () {
                           Get.toNamed(
-                            '/add-or-edit-task',
+                            '/task-form',
                             arguments: {
                               'task-id': task.id,
                             },

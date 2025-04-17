@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:popover/popover.dart';
 import 'package:taskito/models/task.dart';
 import 'package:taskito/models/tasks_database.dart';
+import 'package:taskito/view/components/popover_task_more_options.dart';
 import 'package:taskito/view/components/task_tile.dart';
 
 class DoneTasksScreen extends StatelessWidget {
@@ -40,22 +42,38 @@ class DoneTasksScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final task = tasks[index];
                     return TaskTile(
-                        title: task.name,
-                        description: task.description,
-                        status: task.status,
-                        startDate:
-                            '${task.startDate?.year ?? DateTime.now().year}-${task.startDate?.month.toString().padLeft(2, '0') ?? '01'}-${task.startDate?.day.toString().padLeft(2, '0') ?? '01'}',
-                        endDate:
-                            '${task.endDate?.year ?? '2025'}-${task.endDate?.month.toString().padLeft(2, '0') ?? '01'}-${task.endDate?.day.toString().padLeft(2, '0') ?? '01'}',
-                        onTap: () {
-                          Get.toNamed(
-                            '/task-details',
-                            arguments: {
-                              'pageTitle': 'Details',
-                              'taskId': task.id,
+                      title: task.name,
+                      description: task.description,
+                      status: task.status,
+                      startDate:
+                          '${task.startDate?.year ?? DateTime.now().year}-${task.startDate?.month.toString().padLeft(2, '0') ?? '01'}-${task.startDate?.day.toString().padLeft(2, '0') ?? '01'}',
+                      endDate:
+                          '${task.endDate?.year ?? '2025'}-${task.endDate?.month.toString().padLeft(2, '0') ?? '01'}-${task.endDate?.day.toString().padLeft(2, '0') ?? '01'}',
+                      onTap: () {
+                        Get.toNamed(
+                          '/task-details',
+                          arguments: {
+                            'pageTitle': 'Details',
+                            'taskId': task.id,
+                          },
+                        );
+                      },
+                      onMoreBtnTap: () {
+                        showPopover(
+                          context: context,
+                          bodyBuilder: (context) => PopoverTaskMoreOptions(
+                            onTapOnEditBtn: () {
+                              print('On edit button tapped');
                             },
-                          );
-                        });
+                          ),
+                          direction: PopoverDirection.bottom,
+                          width: 250,
+                          height: 100,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.background,
+                        );
+                      },
+                    );
                   },
                 ),
         ),

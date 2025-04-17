@@ -140,8 +140,8 @@ class HomePage extends StatelessWidget {
           ),
         ),
         child: IconButton(
-          onPressed: () => Get.toNamed('/add-or-edit-task',
-              arguments: {'pageTitle': 'Add Task'}),
+          onPressed: () =>
+              Get.toNamed('/task-form', arguments: {'task-id': -1}),
           icon: Icon(
             Icons.add,
             color: Theme.of(context).colorScheme.onSurface,

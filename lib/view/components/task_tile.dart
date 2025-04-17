@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:popover/popover.dart';
 import 'package:taskito/controllers/status_color_controller.dart';
+import 'package:taskito/view/components/popover_status_items.dart';
 
 class TaskTile extends StatelessWidget {
   final String status;
@@ -10,6 +12,7 @@ class TaskTile extends StatelessWidget {
   final String startDate;
   final String endDate;
   final Function()? onTap;
+  final Function()? onMoreBtnTap;
   const TaskTile({
     super.key,
     required this.title,
@@ -18,7 +21,46 @@ class TaskTile extends StatelessWidget {
     required this.onTap,
     required this.startDate,
     required this.endDate,
+    required this.onMoreBtnTap,
   });
+
+// PopupMenuButton
+  void _showPopupMenu(BuildContext context) {
+    showMenu<String>(
+      context: context,
+      position: RelativeRect.fromLTRB(25, 25, 0, 0),
+      items: <PopupMenuEntry<String>>[
+        const PopupMenuItem<String>(
+          value: 'edit',
+          child: Text('Edit'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'delete',
+          child: Text('Delete'),
+        ),
+      ],
+      elevation: 8.0,
+    ).then<void>((String? selected) {
+      if (selected == null) return;
+      switch (selected) {
+        case 'edit':
+          Get.toNamed('/task-form', arguments: {
+            'pageTitle': 'Edit Task',
+            'task': {
+              'title': title,
+              'description': description,
+              'status': status,
+              'startDate': startDate,
+              'endDate': endDate,
+            },
+          });
+          break;
+        case 'delete':
+          // Supprimer la tâche
+          break;
+      }
+    });
+  }
 
   void _showStatusChanger(
       BuildContext context, StatusColorController controller) {
@@ -124,7 +166,18 @@ class TaskTile extends StatelessWidget {
           children: [
             // Task status
             InkWell(
-              onTap: () => _showStatusChanger(context, statusColorController),
+              // onTap: () => _showStatusChanger(context, statusColorController),
+              onTap: () {
+                showPopover(
+                  context: context,
+                  bodyBuilder: (context) => const PopoverStatusItems(),
+                  onPop: () => print('Popover was popped!'),
+                  direction: PopoverDirection.bottom,
+                  width: 250,
+                  height: 150,
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                );
+              },
               child: Text(
                 status.toUpperCase(),
                 style: TextStyle(
@@ -202,25 +255,10 @@ class TaskTile extends StatelessWidget {
                 Container(
                   color: Theme.of(context).colorScheme.surface,
                   width: 15,
-                  child: InkWell(
-                    onTap: () =>
-                        _showStatusChanger(context, statusColorController),
-                    // onTap: () {
-                    //   showPopover(
-                    //     context: context,
-                    //     bodyBuilder: (context) => Text(
-                    //       'Popover Body',
-                    //       style: TextStyle(
-                    //           color: Theme.of(context).colorScheme.tertiary),
-                    //     ),
-                    //     onPop: () => print('Popover was popped!'),
-                    //     direction: PopoverDirection.bottom,
-                    //     width: 200,
-                    //     height: 400,
-                    //     arrowHeight: 15,
-                    //     arrowWidth: 30,
-                    //   );
-                    // },
+                  child: GestureDetector(
+                    // onTap: () =>
+                    //     _showStatusChanger(context, statusColorController),
+                    onTap: onMoreBtnTap,
                     child: Icon(
                       Icons.more_vert,
                       color: Theme.of(context).colorScheme.tertiary,
